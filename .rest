@@ -1,0 +1,60 @@
+@url = http://localhost:3003/api/
+
+###TRY GET ALL
+GET {{url}}
+
+###TRY WIPE ALL
+POST {{url}}testing/reset
+
+###TRY GET ALL BLOGS
+GET {{url}}blogs
+
+###TRY GET ALL USERS
+GET {{url}}users
+
+###TRY INJECT USERS
+GET {{url}}blogs/injectUsers
+
+###TRY COMMENT
+POST {{url}}blogs/5a422a851b54a676234d17f7/comments
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJlc3RVc2VyIiwiaWQiOiI2N2UxYjNiZGJkYzc0ODg0Y2Q4MzJiN2UiLCJpYXQiOjE3NDMxODQ0MzIsImV4cCI6MTc0MzE4ODAzMn0.WW2hObFwzTILswXZUBv_h1Wur6sl7tClr2RVz0-nhMc
+Content-Type: application/json
+
+{
+  "comment": "This is nice"
+}
+
+###TRY ADD
+POST {{url}}blogs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImtldmFwIiwiaWQiOiI2N2I4OTE1MDBkMGY4ZDRmZDNhNGY1MTMiLCJpYXQiOjE3NDAxNTQxMjcsImV4cCI6MTc0MDE1NzcyN30.f2WBXifs9kzVa05j0KJU6qX2dINzUSyAWUJ57x9BhXs
+Content-Type: application/json
+
+{
+  "title": "Kitchen Heavens",
+  "author": "Ramdon Gatsby",
+  "url": "www.kitcheaven.hola"
+}
+
+###TRY DELETE BLOG
+DELETE {{url}}blogs/67b8a532d30e56c5b4021df2
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImtldmFwIiwiaWQiOiI2N2I4OTE1MDBkMGY4ZDRmZDNhNGY1MTMiLCJpYXQiOjE3NDAxNTQxMjcsImV4cCI6MTc0MDE1NzcyN30.f2WBXifs9kzVa05j0KJU6qX2dINzUSyAWUJ57x9BhXs
+
+
+###TRY ADD USER
+POST {{url}}/users
+Content-Type: application/json
+
+{
+  "username": "kevap",
+  "name": "Alvaro",
+  "password": "wdsdsd"
+}
+
+###TRY LOGIN USER
+POST {{url}}/login
+Content-Type: application/json
+
+{
+  "username": "kevap",
+  "password": "wdsdsd"
+}
