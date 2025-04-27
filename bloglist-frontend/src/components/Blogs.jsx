@@ -1,49 +1,49 @@
-import { useRef } from "react";
-import { Link } from "react-router-dom";
-import { Table, Button } from "react-bootstrap";
-import Toggleable from "../components/Toggleable";
-import styles from "./styles/componentStyles.js";
-import NewBlog from "../components/NewBlog";
-import useNotification from "../hooks/useNotification.js";
-import { useBlogs } from "../hooks/useBlogs.js";
+import { useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
+import Toggleable from '../components/Toggleable'
+import styles from './styles/componentStyles.js'
+import NewBlog from '../components/NewBlog'
+import useNotification from '../hooks/useNotification.js'
+import { useBlogs } from '../hooks/useBlogs.js'
 
 const Blogs = ({ user }) => {
-  const { showError, showNotification } = useNotification();
-  const { blogsQuery, createBlogMutation } = useBlogs();
-  const { isLoading, isError, data } = blogsQuery;
+  const { showError, showNotification } = useNotification()
+  const { blogsQuery, createBlogMutation } = useBlogs()
+  const { isLoading, isError, data } = blogsQuery
 
-  const newBlogRef = useRef();
+  const newBlogRef = useRef()
   if (!user) {
-    return null;
+    return null
   }
   if (isLoading) {
-    return <h2>Loading app…</h2>;
+    return <h2>Loading app…</h2>
   }
   if (isError) {
     return (
       <h3>
         Server not available! <p>Please, try later.</p>
       </h3>
-    );
+    )
   }
 
-  const blogs = data;
+  const blogs = data
   const addNewBlog = async (blog) => {
     try {
-      const newBlog = await createBlogMutation.mutateAsync(blog);
+      const newBlog = await createBlogMutation.mutateAsync(blog)
       showNotification(
-        `'${newBlog.title}' by ${newBlog.author} was added to the Blog List!`,
-      );
-      newBlogRef.current?.toggleVisibility();
-      return newBlog;
+        `'${newBlog.title}' by ${newBlog.author} was added to the Blog List!`
+      )
+      newBlogRef.current?.toggleVisibility()
+      return newBlog
     } catch (e) {
       if (e.response?.data?.error) {
-        showError(e.response.data.error);
+        showError(e.response.data.error)
       } else {
-        showError("There was an error adding the entry");
+        showError('There was an error adding the entry')
       }
     }
-  };
+  }
 
   return (
     <div>
@@ -76,8 +76,8 @@ const Blogs = ({ user }) => {
                         <Link to={`/blogs/${b.id}`} {...styles.link}>
                           {b.title}
                         </Link>
-                      }{" "}
-                    </b>{" "}
+                      }{' '}
+                    </b>{' '}
                   </td>
                   <td className="bg-transparent"> {`${b.author}`}</td>
                 </tr>
@@ -90,8 +90,8 @@ const Blogs = ({ user }) => {
       <div>
         <Toggleable
           ref={newBlogRef}
-          labelOnVisible={"Hide new Blog Form"}
-          labelOnInvisible={"Add a new Blog"}
+          labelOnVisible={'Hide new Blog Form'}
+          labelOnInvisible={'Add a new Blog'}
           initialVisibility={false}
           addSpace={false}
           showOver={true}
@@ -100,7 +100,7 @@ const Blogs = ({ user }) => {
         </Toggleable>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Blogs;
+export default Blogs

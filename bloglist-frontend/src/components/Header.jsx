@@ -1,56 +1,56 @@
-import { useRef } from "react";
-import { useUsersQuery } from "../queries/usersQueries.js";
-import { Link, useNavigate } from "react-router-dom";
-import { Button, Navbar, Nav } from "react-bootstrap";
-import styles from "./styles/componentStyles.js";
-import LoginForm from "./LoginForm.jsx";
-import Notification from "./Notification.jsx";
-import useNotification from "../hooks/useNotification.js";
-import useActiveUser from "../hooks/useActiveUser.js";
+import { useRef } from 'react'
+import { useUsersQuery } from '../queries/usersQueries.js'
+import { Link, useNavigate } from 'react-router-dom'
+import { Button, Navbar, Nav } from 'react-bootstrap'
+import styles from './styles/componentStyles.js'
+import LoginForm from './LoginForm.jsx'
+import Notification from './Notification.jsx'
+import useNotification from '../hooks/useNotification.js'
+import useActiveUser from '../hooks/useActiveUser.js'
 
 const Header = ({ user }) => {
-  const { isLoading, isError, data } = useUsersQuery();
+  const { data } = useUsersQuery()
   if (user && data) {
     user.id = data.find(
-      (u) => u.username === user.username && u.name === user.name,
-    )?.id;
+      (u) => u.username === user.username && u.name === user.name
+    )?.id
   }
-  const navigate = useNavigate();
-  const { showNotification } = useNotification();
-  const { resetUserData, setUserData } = useActiveUser();
+  const navigate = useNavigate()
+  const { showNotification } = useNotification()
+  const { resetUserData, setUserData } = useActiveUser()
 
-  const loginFormRef = useRef();
+  const loginFormRef = useRef()
 
   const resetSession = () => {
-    showNotification(`See you soon, ${user.name}!`);
-    loginFormRef.current?.cleanForm();
-    resetUserData();
-  };
+    showNotification(`See you soon, ${user.name}!`)
+    loginFormRef.current?.cleanForm()
+    resetUserData()
+  }
 
   const setSession = (userData) => {
-    setUserData(userData);
-    navigate("/");
-    showNotification(`Welcome back, ${userData.name}!`);
-  };
+    setUserData(userData)
+    navigate('/')
+    showNotification(`Welcome back, ${userData.name}!`)
+  }
 
   const linkStyle = {
-    paddingRight: "15px",
-    fontStyle: "none",
-    textDecoration: "none",
-    color: "#e1e1e1",
-  };
+    paddingRight: '15px',
+    fontStyle: 'none',
+    textDecoration: 'none',
+    color: '#e1e1e1',
+  }
   const userStyle = {
-    paddingRight: "5px",
-    paddingLeft: "5px",
-    fontStyle: "none",
-    textDecoration: "underline",
-    color: "#e1e1e1",
-  };
+    paddingRight: '5px',
+    paddingLeft: '5px',
+    fontStyle: 'none',
+    textDecoration: 'underline',
+    color: '#e1e1e1',
+  }
   const loggedStyle = {
-    paddingRight: "20px",
-    paddingTop: "4px",
-    color: "#abd1e6",
-  };
+    paddingRight: '20px',
+    paddingTop: '4px',
+    color: '#abd1e6',
+  }
 
   return (
     <div className="mb-3">
@@ -79,7 +79,7 @@ const Header = ({ user }) => {
             {user && (
               <>
                 <span style={loggedStyle}>
-                  Logged in as{" "}
+                  Logged in as{' '}
                   <b>
                     {user.id && (
                       <Link to={`/users/${user.id}`} style={userStyle}>
@@ -108,7 +108,7 @@ const Header = ({ user }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

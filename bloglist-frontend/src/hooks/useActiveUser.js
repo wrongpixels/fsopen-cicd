@@ -1,32 +1,32 @@
-import { useEffect } from "react";
-import blogService from "../services/blogs.js";
+import { useEffect } from 'react'
+import blogService from '../services/blogs.js'
 
 import {
   setUser,
   resetUser,
   restoreUser,
-} from "../actions/activeUserActions.js";
-import { useActiveUserContext } from "../context/ActiveUserContext.jsx";
+} from '../actions/activeUserActions.js'
+import { useActiveUserContext } from '../context/ActiveUserContext.jsx'
 
 const useActiveUser = () => {
-  const [activeUser, dispatchUser] = useActiveUserContext();
+  const [activeUser, dispatchUser] = useActiveUserContext()
 
-  const setUserData = (userData) => dispatchUser(setUser(userData));
-  const resetUserData = () => dispatchUser(resetUser);
+  const setUserData = (userData) => dispatchUser(setUser(userData))
+  const resetUserData = () => dispatchUser(resetUser)
   const restoreUserData = () => {
     if (!activeUser) {
-      dispatchUser(restoreUser);
+      dispatchUser(restoreUser)
     }
-  };
+  }
 
   useEffect(() => {
     if (activeUser) {
-      blogService.buildToken(activeUser.token);
+      blogService.buildToken(activeUser.token)
     } else {
-      blogService.buildToken("");
+      blogService.buildToken('')
     }
-  }, [activeUser]);
+  }, [activeUser])
 
-  return { activeUser, setUserData, resetUserData, restoreUserData };
-};
-export default useActiveUser;
+  return { activeUser, setUserData, resetUserData, restoreUserData }
+}
+export default useActiveUser

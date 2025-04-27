@@ -1,51 +1,51 @@
-import PropTypes from "prop-types";
-import { Table, Button } from "react-bootstrap";
-import styles from "./styles/componentStyles.js";
-import BlogComments from "./BlogComments.jsx";
-import useNotification from "../hooks/useNotification.js";
-import { useBlog } from "../hooks/useBlogs.js";
-import { useQueryClient } from "@tanstack/react-query";
-import { useMatch, useNavigate, Link } from "react-router-dom";
+import PropTypes from 'prop-types'
+import { Button } from 'react-bootstrap'
+import styles from './styles/componentStyles.js'
+import BlogComments from './BlogComments.jsx'
+import useNotification from '../hooks/useNotification.js'
+import { useBlog } from '../hooks/useBlogs.js'
+import { useQueryClient } from '@tanstack/react-query'
+import { useMatch, useNavigate, Link } from 'react-router-dom'
 
 const Blog = ({ user }) => {
-  const { showError, showNotification } = useNotification();
-  const { blogsQuery, deleteBlogMutation, replaceBlogMutation } = useBlog();
-  const { isLoading, isError, data } = blogsQuery;
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const cachedBlogs = queryClient.getQueryData(["blogs"]);
+  const { showError, showNotification } = useNotification()
+  const { blogsQuery, deleteBlogMutation, replaceBlogMutation } = useBlog()
+  const { isLoading, isError, data } = blogsQuery
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const cachedBlogs = queryClient.getQueryData(['blogs'])
 
-  const match = useMatch("/blogs/:id");
-  const blogs = cachedBlogs ? cachedBlogs : isError || isLoading ? null : data;
+  const match = useMatch('/blogs/:id')
+  const blogs = cachedBlogs ? cachedBlogs : isError || isLoading ? null : data
   if (!user) {
-    return null;
+    return null
   }
   if (!blogs) {
     if (isLoading) {
-      return <h3>Loading...</h3>;
+      return <h3>Loading...</h3>
     }
     if (isError) {
-      return <h3>Error loading blogs data.</h3>;
+      return <h3>Error loading blogs data.</h3>
     }
   }
   if (!blogs) {
-    return <div>No blogs data available.</div>;
+    return <div>No blogs data available.</div>
   }
 
-  const targetBlog = blogs.find((b) => b.id === match?.params.id);
+  const targetBlog = blogs.find((b) => b.id === match?.params.id)
   if (!targetBlog) {
-    return <div>Blog data not found in server.</div>;
+    return <div>Blog data not found in server.</div>
   }
 
   const deleteBlog = () => {
     deleteBlogMutation.mutate(targetBlog, {
       onSuccess: () => {
-        showNotification(`Blog '${targetBlog.title}' was deleted!`);
-        navigate("/");
+        showNotification(`Blog '${targetBlog.title}' was deleted!`)
+        navigate('/')
       },
-      onError: () => showError("There was an error deleting the blog"),
-    });
-  };
+      onError: () => showError('There was an error deleting the blog'),
+    })
+  }
 
   const addLike = () => {
     replaceBlogMutation.mutate(
@@ -53,37 +53,28 @@ const Blog = ({ user }) => {
       {
         onSuccess: () =>
           showNotification(`Blog '${targetBlog.title}' was liked!`),
-        onError: () => showError("There was an error adding the like"),
-      },
-    );
-  };
-  const blogSectionStyle = {
-    paddingTop: 10,
-    paddingLeft: 10,
-    marginRight: 20,
-    paddingBottom: 10,
-    border: "solid",
-    borderWidth: 1,
-    marginTop: 10,
-    marginBottom: 10,
-  };
+        onError: () => showError('There was an error adding the like'),
+      }
+    )
+  }
+
   const buttonStyle = {
     paddingTop: 5,
     paddingBottom: 7,
-  };
+  }
 
   const handleDeleteBlog = async () => {
     if (
       window.confirm(
-        `Delete blog '${targetBlog.title}' by ${targetBlog.author}?\n\nThis action is permanent.`,
+        `Delete blog '${targetBlog.title}' by ${targetBlog.author}?\n\nThis action is permanent.`
       )
     ) {
-      deleteBlog();
+      deleteBlog()
     }
-  };
+  }
   const deleteButton = () => {
     if (!targetBlog.user) {
-      return;
+      return
     }
     if (targetBlog.user.username === user?.username) {
       return (
@@ -96,9 +87,9 @@ const Blog = ({ user }) => {
             Remove
           </Button>
         </div>
-      );
+      )
     }
-  };
+  }
 
   return (
     <div className="blog-entry">
@@ -140,25 +131,25 @@ const Blog = ({ user }) => {
               {targetBlog.user.username}
             </Link>
           ) : (
-            "?"
+            '?'
           )}
         </div>
         {deleteButton()}
       </div>
       <BlogComments targetBlog={targetBlog} />
       <Button
-        onClick={() => navigate("/")}
+        onClick={() => navigate('/')}
         variant="outline-secondary"
         {...styles.fixedButton}
       >
         Go back
       </Button>
     </div>
-  );
-};
+  )
+}
 
 Blog.propTypes = {
   user: PropTypes.object,
-};
+}
 
-export default Blog;
+export default Blog

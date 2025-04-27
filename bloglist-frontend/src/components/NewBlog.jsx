@@ -1,42 +1,42 @@
-import useInputField from "../hooks/useInputField.js";
-import useNotification from "../hooks/useNotification.js";
-import { Form, Button } from "react-bootstrap";
-import styles from "./styles/componentStyles.js";
+import useInputField from '../hooks/useInputField.js'
+import useNotification from '../hooks/useNotification.js'
+import { Form, Button } from 'react-bootstrap'
+import styles from './styles/componentStyles.js'
 
 const NewBlog = ({ addNewBlog }) => {
-  const { showNotification } = useNotification();
+  const { showNotification } = useNotification()
   const [title, titleProps, titleFns] = useInputField(
-    "text",
-    "Title",
-    "Title",
-    "blog-title",
-  );
+    'text',
+    'Title',
+    'Title',
+    'blog-title'
+  )
   const [author, authorProps, authorFns] = useInputField(
-    "text",
-    "Author",
-    "Author",
-    "blog-author",
-  );
+    'text',
+    'Author',
+    'Author',
+    'blog-author'
+  )
   const [url, urlProps, urlFns] = useInputField(
-    "text",
-    "Url",
-    "URL",
-    "blog-url",
-  );
+    'text',
+    'Url',
+    'URL',
+    'blog-url'
+  )
 
   const handleAddBlog = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     if (!title || !author || !url) {
-      showNotification("Can't add an entry with empty fields!");
-      return;
+      showNotification('Cannot add an entry with empty fields!')
+      return
     }
-    const newBlog = await addNewBlog({ title, author, url });
+    const newBlog = await addNewBlog({ title, author, url })
     if (newBlog && newBlog.title === title) {
-      titleFns.clean();
-      authorFns.clean();
-      urlFns.clean();
+      titleFns.clean()
+      authorFns.clean()
+      urlFns.clean()
     }
-  };
+  }
 
   return (
     <div className="w-75 mx-auto">
@@ -62,6 +62,6 @@ const NewBlog = ({ addNewBlog }) => {
         </Button>
       </Form>
     </div>
-  );
-};
-export default NewBlog;
+  )
+}
+export default NewBlog

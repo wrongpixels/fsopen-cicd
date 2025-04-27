@@ -1,12 +1,12 @@
 export const setUser = (userData) => ({
-  type: "LOGIN",
+  type: 'LOGIN',
   payload: userData,
-});
+})
 
 export const resetUser = {
-  type: "LOGOUT",
-};
+  type: 'LOGOUT',
+}
 
 export const restoreUser = {
-  type: "RESTORE_SESSION",
-};
+  type: 'RESTORE_SESSION',
+}

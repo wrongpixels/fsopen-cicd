@@ -1,13 +1,13 @@
-import { useNotificationValue } from "../context/NotificationContext.jsx";
-import { Alert } from "react-bootstrap";
+import { useNotificationValue } from '../context/NotificationContext.jsx'
+import { Alert } from 'react-bootstrap'
 
 const Notification = () => {
-  const { message, error } = useNotificationValue();
+  const { message, error } = useNotificationValue()
   if (!message) {
-    return null;
+    return null
   }
 
-  const variant = error ? "danger" : "success";
+  const variant = error ? 'danger' : 'success'
 
   return (
     <Alert
@@ -16,7 +16,7 @@ const Notification = () => {
     >
       {message}
     </Alert>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification

@@ -1,4 +1,4 @@
 node_modules
 dist
-.eslintrc.cjs
+.eslintrc.js
 vite.config.js

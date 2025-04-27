@@ -1,54 +1,54 @@
-import loginService from "../services/login.js";
-import { Form, Button } from "react-bootstrap";
-import useNotification from "../hooks/useNotification.js";
-import useInputField from "../hooks/useInputField.js";
-import { forwardRef, useImperativeHandle } from "react";
-import styles from "./styles/componentStyles.js";
+import loginService from '../services/login.js'
+import { Form, Button } from 'react-bootstrap'
+import useNotification from '../hooks/useNotification.js'
+import useInputField from '../hooks/useInputField.js'
+import { forwardRef, useImperativeHandle } from 'react'
+import styles from './styles/componentStyles.js'
 
 const LoginForm = forwardRef((props, refs) => {
-  const { showError } = useNotification();
-  LoginForm.displayName = "LoginForm";
+  const { showError } = useNotification()
+  LoginForm.displayName = 'LoginForm'
   const [username, userProps, userFunctions] = useInputField(
-    "text",
-    "Username",
-    "",
-    "username",
-  );
+    'text',
+    'Username',
+    '',
+    'username'
+  )
   const [password, passProps, passFunctions] = useInputField(
-    "password",
-    "Password",
-    "",
-    "password",
-  );
-  const { setSession } = props;
+    'password',
+    'Password',
+    '',
+    'password'
+  )
+  const { setSession } = props
 
   const cleanForm = () => {
-    passFunctions.clean();
-    userFunctions.clean();
-  };
-  useImperativeHandle(refs, () => ({ cleanForm }));
+    passFunctions.clean()
+    userFunctions.clean()
+  }
+  useImperativeHandle(refs, () => ({ cleanForm }))
 
   const doLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
     if (!username || !password) {
-      showError("Username and password can't be empty.");
-      return;
+      showError('Username and password can\'t be empty.')
+      return
     }
-    const userData = await loginService.tryLogin(username, password);
+    const userData = await loginService.tryLogin(username, password)
     if (userData === null) {
-      showError("Login failed.");
-      return;
+      showError('Login failed.')
+      return
     }
     if (userData.error) {
-      showError(userData.error);
-      return;
+      showError(userData.error)
+      return
     }
     if (!userData.token) {
-      showError("Token is not valid.");
-      return;
+      showError('Token is not valid.')
+      return
     }
-    setSession(userData);
-  };
+    setSession(userData)
+  }
 
   return (
     <div className="mt-4">
@@ -80,7 +80,7 @@ const LoginForm = forwardRef((props, refs) => {
         </p>
       </Form>
     </div>
-  );
-});
+  )
+})
 
-export default LoginForm;
+export default LoginForm

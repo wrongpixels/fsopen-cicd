@@ -1,57 +1,46 @@
-import useInputField from "../hooks/useInputField.js";
-import useNotification from "../hooks/useNotification.js";
-import { useAddComment } from "../queries/blogQueries.js";
-import styles from "./styles/componentStyles.js";
-import { Button, Form } from "react-bootstrap";
+import useInputField from '../hooks/useInputField.js'
+import useNotification from '../hooks/useNotification.js'
+import { useAddComment } from '../queries/blogQueries.js'
+import styles from './styles/componentStyles.js'
+import { Button, Form } from 'react-bootstrap'
 
-const blogSectionStyle = {
-  paddingTop: 10,
-  paddingLeft: 10,
-  marginRight: 20,
-  paddingBottom: 10,
-  border: "solid",
-  borderWidth: 1,
-  marginTop: 10,
-  marginBottom: 10,
-};
+console.log('error')
 
 const BlogComments = ({ targetBlog }) => {
-  const addCommentMutation = useAddComment();
+  const addCommentMutation = useAddComment()
   const [comment, commentProps, commentFunctions] = useInputField(
-    "text",
-    "Comment",
-    "Write a comment",
-  );
-  const { showError, showNotification } = useNotification();
+    'text',
+    'Comment',
+    'Write a comment'
+  )
+  const { showError, showNotification } = useNotification()
 
   const addComment = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     if (!comment) {
-      showError("You can't add an empty comment!");
-      return;
+      showError('You cannot add an empty comment!')
+      return
     }
     const alreadyExists = targetBlog.comments?.find(
-      (c) => c.content === comment.trim(),
-    );
+      (c) => c.content === comment.trim()
+    )
     if (alreadyExists) {
-      showError("Same comment already exists!");
-      return;
+      showError('Same comment already exists!')
+      return
     }
-    const commentData = { comment, blog: targetBlog };
+    const commentData = { comment, blog: targetBlog }
     addCommentMutation.mutate(commentData, {
       onSuccess: () => {
-        showNotification("Your comment was added to blog!");
-        commentFunctions.clean();
+        showNotification('Your comment was added to blog!')
+        commentFunctions.clean()
       },
       onError: (error) =>
         showError(
-          error.response.data?.error
-            ? error.response.data.error
-            : error.message,
+          error.response.data?.error ? error.response.data.error : error.message
         ),
-    });
-  };
+    })
+  }
 
   return (
     <div>
@@ -62,7 +51,7 @@ const BlogComments = ({ targetBlog }) => {
           </h4>
         </div>
         {targetBlog.comments && targetBlog.comments.length === 0 && (
-          <div>No comments yet! Why don't you write one?</div>
+          <div>No comments yet! Why not write one?</div>
         )}
         {targetBlog.comments && (
           <ul>
@@ -83,6 +72,6 @@ const BlogComments = ({ targetBlog }) => {
         </Form>
       </div>
     </div>
-  );
-};
-export default BlogComments;
+  )
+}
+export default BlogComments

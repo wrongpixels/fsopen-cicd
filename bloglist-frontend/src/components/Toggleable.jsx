@@ -1,21 +1,20 @@
-import { useState, forwardRef, useImperativeHandle } from "react";
-import { Button } from "react-bootstrap";
-import styles from "./styles/componentStyles.js";
+import { useState, forwardRef, useImperativeHandle } from 'react'
+import { Button } from 'react-bootstrap'
 const Toggleable = forwardRef((props, refs) => {
   const {
-    labelOnVisible = "Hide",
-    labelOnInvisible = "Show",
+    labelOnVisible = 'Hide',
+    labelOnInvisible = 'Show',
     initialVisibility = false,
     addSpace = true,
     showOver = false,
     children,
-  } = props;
-  Toggleable.displayName = "Toggleable";
+  } = props
+  Toggleable.displayName = 'Toggleable'
 
-  const [visibility, setVisibility] = useState(initialVisibility);
-  const toggleVisibility = () => setVisibility(!visibility);
+  const [visibility, setVisibility] = useState(initialVisibility)
+  const toggleVisibility = () => setVisibility(!visibility)
 
-  const buttonStyle = !visibility ? "success" : "outline-secondary";
+  const buttonStyle = !visibility ? 'success' : 'outline-secondary'
 
   const drawButton = () => (
     <Button
@@ -25,17 +24,17 @@ const Toggleable = forwardRef((props, refs) => {
     >
       {visibility ? labelOnVisible : labelOnInvisible}
     </Button>
-  );
+  )
 
-  const visibilityStyle = () => ({ display: visibility ? "" : "none" });
+  const visibilityStyle = () => ({ display: visibility ? '' : 'none' })
   const addBreak = (
     <>
       <br />
       <br />
     </>
-  );
+  )
 
-  useImperativeHandle(refs, () => ({ toggleVisibility }));
+  useImperativeHandle(refs, () => ({ toggleVisibility }))
 
   return (
     <>
@@ -46,7 +45,7 @@ const Toggleable = forwardRef((props, refs) => {
       {!showOver && drawButton()}
       {addSpace ? addBreak : <></>}
     </>
-  );
-});
+  )
+})
 
-export default Toggleable;
+export default Toggleable

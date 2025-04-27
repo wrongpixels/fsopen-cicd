@@ -1,23 +1,21 @@
-import { Link } from "react-router-dom";
-import { Table } from "react-bootstrap";
-import styles from "./styles/componentStyles.js";
-import useNotification from "../hooks/useNotification.js";
-import { useUsersQuery } from "../queries/usersQueries.js";
+import { Link } from 'react-router-dom'
+import { Table } from 'react-bootstrap'
+import styles from './styles/componentStyles.js'
+import { useUsersQuery } from '../queries/usersQueries.js'
 
 const Users = ({ user }) => {
-  const { showError } = useNotification();
-  const { isLoading, isError, data } = useUsersQuery();
+  const { isLoading, isError, data } = useUsersQuery()
   if (!user) {
-    return null;
+    return null
   }
   if (isError) {
-    return <h3>Couldn't load user data.</h3>;
+    return <h3>Error loading user data.</h3>
   }
   if (isLoading) {
-    return <h3>Loading…</h3>;
+    return <h3>Loading…</h3>
   }
 
-  const users = data;
+  const users = data
 
   return (
     <div>
@@ -46,8 +44,8 @@ const Users = ({ user }) => {
                 <td className="bg-transparent">
                   <b>
                     <Link {...styles.link} to={`/users/${u.id}`}>
-                      {" "}
-                      {u.name}{" "}
+                      {' '}
+                      {u.name}{' '}
                     </Link>
                   </b>
                 </td>
@@ -58,6 +56,6 @@ const Users = ({ user }) => {
         </Table>
       </div>
     </div>
-  );
-};
-export default Users;
+  )
+}
+export default Users

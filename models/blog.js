@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
 const blogSchema = new mongoose.Schema({
   url: {
@@ -15,7 +15,7 @@ const blogSchema = new mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: "User",
+    ref: 'User',
     required: true,
   },
   likes: {
@@ -27,20 +27,20 @@ const blogSchema = new mongoose.Schema({
       content: String,
     },
   ],
-});
+})
 
-blogSchema.set("toJSON", {
+blogSchema.set('toJSON', {
   transform: (doc, ret) => {
-    ret.id = ret._id.toString();
+    ret.id = ret._id.toString()
     if (ret.comments) {
       ret.comments.forEach((c) => {
-        c.id = c._id.toString();
-        delete c._id;
-      });
+        c.id = c._id.toString()
+        delete c._id
+      })
     }
-    delete ret._id;
-    delete ret.__v;
+    delete ret._id
+    delete ret.__v
   },
-});
+})
 
-module.exports = mongoose.model("Blog", blogSchema);
+module.exports = mongoose.model('Blog', blogSchema)

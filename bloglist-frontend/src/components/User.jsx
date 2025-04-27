@@ -1,36 +1,36 @@
-import { useMatch, useNavigate, Link } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
-import { useUsersQuery } from "../queries/usersQueries.js";
-import { Button } from "react-bootstrap";
-import styles from "./styles/componentStyles.js";
+import { useMatch, useNavigate, Link } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
+import { useUsersQuery } from '../queries/usersQueries.js'
+import { Button } from 'react-bootstrap'
+import styles from './styles/componentStyles.js'
 
 const User = ({ user }) => {
-  const queryClient = useQueryClient();
-  const navigate = useNavigate();
-  const cachedUsers = queryClient.getQueryData(["users"]);
+  const queryClient = useQueryClient()
+  const navigate = useNavigate()
+  const cachedUsers = queryClient.getQueryData(['users'])
 
-  const match = useMatch("/users/:id");
-  const { data, isLoading, isError } = useUsersQuery();
+  const match = useMatch('/users/:id')
+  const { data, isLoading, isError } = useUsersQuery()
   if (!user) {
-    return null;
+    return null
   }
-  const users = cachedUsers ? cachedUsers : isLoading || isError ? null : data;
+  const users = cachedUsers ? cachedUsers : isLoading || isError ? null : data
   if (!users) {
     if (isLoading) {
-      return <h3>Loading...</h3>;
+      return <h3>Loading...</h3>
     }
     if (isError) {
-      return <h3>Error loading users data.</h3>;
+      return <h3>Error loading users data.</h3>
     }
   }
 
   if (!users) {
-    return <div>No users data available.</div>;
+    return <div>No users data available.</div>
   }
-  const targetUser = users.find((u) => u.id === match?.params.id);
+  const targetUser = users.find((u) => u.id === match?.params.id)
 
   if (!targetUser) {
-    return <div>User not found in server.</div>;
+    return <div>User not found in server.</div>
   }
 
   return (
@@ -62,14 +62,14 @@ const User = ({ user }) => {
         </ul>
       </div>
       <Button
-        onClick={() => navigate("/users")}
+        onClick={() => navigate('/users')}
         {...styles.fixedButton}
         variant="outline-secondary"
       >
         Go back
       </Button>
     </>
-  );
-};
+  )
+}
 
-export default User;
+export default User
