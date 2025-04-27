@@ -8,7 +8,8 @@
     "start:test": "cross-env NODE_ENV=test nodemon index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "eslint": "eslint .",
-    "test:only": "cross-env NODE_ENV=test node --test --test-only"
+    "test:only": "cross-env NODE_ENV=test node --test --test-only",
+    "build-fe": "npm --prefix bloglist-frontend run build"
   },
   "author": "Al Moreno",
   "license": "MIT",
