@@ -4,8 +4,6 @@ import { useAddComment } from '../queries/blogQueries.js'
 import styles from './styles/componentStyles.js'
 import { Button, Form } from 'react-bootstrap'
 
-console.log('error')
-
 const BlogComments = ({ targetBlog }) => {
   const addCommentMutation = useAddComment()
   const [comment, commentProps, commentFunctions] = useInputField(

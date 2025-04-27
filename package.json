@@ -5,11 +5,11 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test node --test",
     "start": "cross-env NODE_ENV=production node index.js",
+    "start:prod": "npm --prefix bloglist-frontend run build && cross-env NODE_ENV=production node index.js",
     "start:test": "cross-env NODE_ENV=test nodemon index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "eslint": "eslint .",
-    "test:only": "cross-env NODE_ENV=test node --test --test-only",
-    "build-fe": "npm --prefix bloglist-frontend run build"
+    "test:only": "cross-env NODE_ENV=test node --test --test-only"
   },
   "author": "Al Moreno",
   "license": "MIT",

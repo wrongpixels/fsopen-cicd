@@ -29,8 +29,8 @@ module.exports = {
     'no-trailing-spaces': 'error',
     'object-curly-spacing': ['error', 'always'],
     'arrow-spacing': ['error', { before: true, after: true }],
-    'no-console': 0,  // cambié esto a 0 para permitir console.log
+    'no-console':1,
     'react/prop-types': 0,
-    'react/react-in-jsx-scope': 0  // añadí esto para React 17+
+    'react/react-in-jsx-scope': 0
   },
 }
