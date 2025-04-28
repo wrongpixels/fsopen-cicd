@@ -64,9 +64,6 @@ const listWithOneBlog = [{
   likes: 5,
   __v: 0
 }]
-test('dummy returns one', () => {
-  equals(listHelper.dummy([]), 1)
-})
 
 describe('total likes', () => {
   test('of an empty list is 0', () => equals(listHelper.totalLikes([]), 0))

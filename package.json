@@ -7,6 +7,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "start:prod": "npm --prefix bloglist-frontend run build && cross-env NODE_ENV=production node index.js",
     "start:test": "cross-env NODE_ENV=test nodemon index.js",
+    "start:test-prod": "cross-env NODE_ENV=test-production nodemon index.js",
     "dev": "cross-env NODE_ENV=development nodemon index.js",
     "eslint": "eslint .",
     "test:only": "cross-env NODE_ENV=test node --test --test-only"
@@ -28,6 +29,8 @@
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.7.4",
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.15.3",
     "eslint": "^8.56.0",
     "nodemon": "^3.1.9",
     "supertest": "^7.0.0"

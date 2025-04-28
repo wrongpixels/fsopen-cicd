@@ -70,7 +70,7 @@ const Blogs = ({ user }) => {
             <tbody>
               {blogs.map((b) => (
                 <tr key={b.id}>
-                  <td className="bg-transparent">
+                  <td className="bg-transparent blog-entry">
                     <b>
                       {
                         <Link to={`/blogs/${b.id}`} {...styles.link}>

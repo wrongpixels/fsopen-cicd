@@ -27,17 +27,14 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 app.use(middleware.tokenExtractor)
-if (process.env.NODE_ENV !=='test') {
-  app.use(middleware.morganLogger())
-  if (process.env.NODE_ENV === 'production')
-  {
-    app.use(express.static('./dist'))
-  }
-}
-else
+if (process.env.NODE_ENV.includes('production'))
 {
+  app.use(express.static('./dist'))
+}
+if (process.env.NODE_ENV.includes('test')) {
   app.use('/api/testing', testingRouter)
 }
+
 app.get('/health', (req, res) => {
   res.send('ok')
 })
