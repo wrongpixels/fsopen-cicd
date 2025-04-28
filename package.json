@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test node --test",
+    "test:e2e": "npx playwright test",
     "start": "cross-env NODE_ENV=production node index.js",
     "start:prod": "npm --prefix bloglist-frontend run build && cross-env NODE_ENV=production node index.js",
     "start:test": "cross-env NODE_ENV=test nodemon index.js",
