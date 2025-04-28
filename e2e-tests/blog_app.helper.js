@@ -104,16 +104,23 @@ const clickButtonInLocator = async (locator, buttonName) => {
 }
 
 const likeBlog = async (blog, likes = 1) => {
-  await expandBlog(blog)
-  const likesField = blog.locator('.blog-likes')
+  const indvBlog = await clickBlog(blog)
+  const likesField = page.locator('.blog-likes')
   for (let i = 0; i < likes; i++) {
     const _likes = parseInt(await likesField.textContent())
-    await clickButtonInLocator(blog, 'Like!')
-    await expect(blog.getByText(_likes + 1)).toBeVisible()
+    await clickButtonInLocator(indvBlog, 'Like!')
+    await expect(indvBlog.getByText(_likes + 1)).toBeVisible()
   }
 }
 
-const expandBlog = async (blog) => await clickButtonInLocator(blog, 'Show details')
+const clickBlog = async (blog) => {
+  await blog.locator('a').click()
+  const indvBlog = await page.locator('.indv-blog')
+  await expect(indvBlog).toBeVisible()
+  return indvBlog
+
+
+}
 const collapseBlog = async (blog) => await clickButtonInLocator(blog, 'Hide details')
 
 const createBlog = async (blogData = null) => {
@@ -125,7 +132,7 @@ const createBlog = async (blogData = null) => {
   await page.getByTestId('blog-author').fill(blogData.author)
   await page.getByTestId('blog-url').fill(blogData.url)
   await page.getByRole('button', { name: 'Add entry' }).click()
-  const addedBlog = getBlog(blogData.title)
+  const addedBlog = await getBlog(blogData.title)
   await addedBlog.waitFor()
   return addedBlog
 }
@@ -142,7 +149,7 @@ module.exports = {
   createBlog,
   getBlog,
   getBlogIndex,
-  expandBlog,
+  clickBlog,
   collapseBlog,
   likeBlog,
   getButtonInLocator,

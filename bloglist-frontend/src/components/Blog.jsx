@@ -92,7 +92,7 @@ const Blog = ({ user }) => {
   }
 
   return (
-    <div className="blog-entry">
+    <div className='indv-blog' >
       <h1>
         <b>Blogs</b>
       </h1>
