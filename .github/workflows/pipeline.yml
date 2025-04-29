@@ -118,7 +118,7 @@ jobs:
 
       - name: Notify Failed Build
         uses: stegzilla/discord-notify@v2
-        if: ${{ failure() && env.SHOULD_DEPLOY }}
+        if: failure()
         with:
           username: The GitHub Times
           title: Blog List build deployment failed!
