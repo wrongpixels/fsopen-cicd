@@ -22,7 +22,7 @@ primary_region = 'cdg'
     [[http_service.machine_checks]]
       image = "curlimages/curl"
       entrypoint = ["/bin/sh", "-c"]
-      command = ["curl -v http://[$FLY_TEST_MACHINE_IP]/health"]
+      command = ["curl http://[$FLY_TEST_MACHINE_IP]:3000/health | grep 'ok'"]
       kill_signal = "SIGKILL"
       kill_timeout = "5s"
 
