@@ -52,11 +52,11 @@ jobs:
         run: npm run test:e2e || (echo "Test Playwright" > fail.txt && exit 1)
 
       - name: Setup Fly
-        if: ${{ env.SHOULD_DEPLOY }}
+        if: ${{env.SHOULD_DEPLOY == 'true' }}
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy to Fly
-        if: ${{ env.SHOULD_DEPLOY }}
+        if: ${{ env.SHOULD_DEPLOY == 'true' }}
         run: flyctl deploy --remote-only || (echo "Deploy to Fly" > fail.txt && exit 1)
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
@@ -101,7 +101,7 @@ jobs:
 
       - name: Notify Successful Build
         uses: stegzilla/discord-notify@v2
-        if: ${{ success() && env.SHOULD_DEPLOY }}
+        if: ${{ success() && env.SHOULD_DEPLOY == 'true' }}
         with:
           username: The GitHub Times
           title: New Blog List build deployed!
