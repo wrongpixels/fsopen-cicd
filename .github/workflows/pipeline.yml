@@ -52,7 +52,7 @@ jobs:
         run: npm run test:e2e || (echo "Test Playwright" > fail.txt && exit 1)
 
       - name: Setup Fly
-        if: ${{env.SHOULD_DEPLOY == 'true' }}
+        if: ${{ env.SHOULD_DEPLOY == 'true' }}
         uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy to Fly
@@ -61,41 +61,7 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-      - name: Upload fail.txt if something failed
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: failed-step
-          path: fail.txt
-          if-no-files-found: ignore
-
-  auto_tag:
-    needs: [deployment_pipeline]
-    runs-on: ubuntu-22.04
-    steps:
-      - uses: actions/checkout@v4
-        if: ${{ env.SHOULD_DEPLOY == 'true' }}
-
-      - name: Version up and push tag
-        if: ${{ env.SHOULD_DEPLOY == 'true' }}
-        uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DEFAULT_BUMP: patch
-          WITH_V: true
-          INITIAL_VERSION: 1.0.0
-
-  notify:
-    needs: [deployment_pipeline, auto_tag]
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Try recover any failed step
-        if: failure()
-        uses: actions/download-artifact@v4
-        with:
-          name: failed-step
-
-      - name: Parse the failed step
+      - name: Parse failed step
         if: failure()
         run: echo "FAILED_STEP=$(cat fail.txt)" >> $GITHUB_ENV
 
@@ -108,7 +74,7 @@ jobs:
           avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
           include_image: false
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-          colour: #00FF00
+          colour: '#00FF00'
           message: |
             - **Site:** [Blog List App](https://bloglist-cicd-fragrant-hill-2166.fly.dev)
             - **Commit Author**: ${{ github.event.head_commit.author.username }}
@@ -125,10 +91,27 @@ jobs:
           avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
           include_image: false
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-          colour: #FF0000
+          colour: '#FF0000'
           message: |
             - **Failed Step:** ${{ env.FAILED_STEP }}
             - **Who to blame:** ${{ github.event.head_commit.author.username }}
             - **Commit:** [${{ github.event.head_commit.id }}](${{ github.event.head_commit.url }})
 
             **Severity:** Error
+
+
+  auto_tag:
+    needs: [deployment_pipeline]
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        if: ${{ env.SHOULD_DEPLOY == 'true' }}
+
+      - name: Version up and push tag
+        if: ${{ env.SHOULD_DEPLOY == 'true' }}
+        uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BUMP: patch
+          WITH_V: true
+          INITIAL_VERSION: 1.0.0
