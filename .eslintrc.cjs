@@ -10,7 +10,8 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'commonjs'
   },
-  ignorePatterns: ['bloglist-frontend/**', 'node_modules/**', 'dist/**', 'build/**'],
+  ignorePatterns: ['bloglist-frontend/**', 'node_modules/**', 'dist/**', 'build/**', 'playwright.config.js'],
+
   rules: {
     'indent': ['error', 2],
     'linebreak-style': ['error', 'unix'],
