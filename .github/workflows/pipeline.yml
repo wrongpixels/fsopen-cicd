@@ -69,6 +69,7 @@ jobs:
           if: ${{env.SHOULD_DEPLOY == 'true'}}
         
         - name: Version up and push tag
+          if: ${{env.SHOULD_DEPLOY == 'true'}}
           uses: anothrNick/github-tag-action@f278d49d30cdd8775cc3e7dd00b5ee11686ee297
           env:
             GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
