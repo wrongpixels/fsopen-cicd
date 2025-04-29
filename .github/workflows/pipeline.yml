@@ -1,0 +1,66 @@
+name: Deployment Pipeline
+env:
+    SHOULD_DEPLOY: ${{github.event_name == 'push' && github.ref_name == 'main' && !contains(github.event.head_commit.message, '#skip')}}
+
+on:
+    push:
+        branches: [main]
+    pull_request: 
+        branches: [main]
+        types: [opened, synchronize]
+
+jobs:
+    deployment_pipeline:
+        runs-on: ubuntu-22.04
+        steps:
+          - uses: actions/checkout@v4
+          - uses: actions/setup-node@v4
+            with:
+              node-version: 20
+
+          - name: Install Backend node
+            run: npm install
+
+          - name: Install Frontend node
+            working-directory: ./bloglist-frontend
+            run: npm install
+
+          - name: Lint Backend
+            run: npm run eslint
+          
+          - name: Lint Frontend
+            working-directory: ./bloglist-frontend
+            run: npm run eslint
+
+          - name: Test Backend
+            run: npm run test
+
+          - name: Vitest Frontend
+            working-directory: './bloglist-frontend'
+            run: npm run test
+
+          - name: Build Frontend
+            working-directory: ./bloglist-frontend
+            run: npm run build
+
+          - name: Install Playwright
+            run: npx playwright install --with-deps
+
+          - name: Test Playwright
+            run: npm run test:e2e
+
+          - name: Setup Fly
+            if: ${{env.SHOULD_DEPLOY}}
+            uses: superfly/flyctl-actions/setup-flyctl@master
+
+          - name: Deploy to Fly
+            if: ${{env.SHOULD_DEPLOY}}
+            run: flyctl deploy --remote-only
+            env:
+              FLY_API_TOKEN: ${{secrets.FLY_API_TOKEN}} 
+              
+                       
+                            
+          
+            
+        
