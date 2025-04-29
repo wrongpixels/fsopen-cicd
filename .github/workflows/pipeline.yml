@@ -1,7 +1,9 @@
 name: Deployment Pipeline
 env:
     SHOULD_DEPLOY: ${{github.event_name == 'push' && github.ref_name == 'main' && !contains(github.event.head_commit.message, '#skip')}}
-
+    PORT: ${{secrets.PORT}}
+    SECRET: ${{secrets.SECRET}}
+    TEST_MONGO_URI: ${{secrets.TEST_MONGO_URI}}
 on:
     push:
         branches: [main]
