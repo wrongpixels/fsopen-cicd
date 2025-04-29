@@ -19,12 +19,12 @@ primary_region = 'cdg'
   min_machines_running = 0
   processes = ['app']
 
-    [[http_service.machine_checks]]
-      image = "curlimages/curl"
-      entrypoint = ["/bin/sh", "-c"]
-      command = ["curl http://[$FLY_TEST_MACHINE_IP]:3000/health | grep 'ok'"]
-      kill_signal = "SIGKILL"
-      kill_timeout = "5s"
+  [[http_service.machine_checks]]
+    image = "curlimages/curl"
+    entrypoint = ["/bin/sh", "-c"]
+    command = ["curl -v http://[$FLY_TEST_MACHINE_IP]:3000/health | grep 'ok'"]
+    kill_signal = "SIGKILL"
+    kill_timeout = "5s"
 
 [[vm]]
   memory = '1gb'
