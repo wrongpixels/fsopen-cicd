@@ -1,0 +1,34 @@
+name: Health Checker
+
+on:
+    schedule:
+        - cron: '0 * * * *'
+jobs:
+    check_deployed_url:
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Check Blog List
+              uses: jtalk/url-health-check-action@v4
+              with:
+                url: https://bloglist-cicd-fragrant-hill-2166.fly.dev
+                max-attempts: 2
+                retry-delay: 5s
+    notify:
+        needs: [check_deployed_url]
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Notify Error
+              uses: stegzilla/discord-notify@v2
+              if: failure()
+              with:
+                username: The GitHub Times
+                title: Blog List App can't be reached!
+                avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+                include_image: false
+                webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+                colour: #FF0000
+                message: |
+                    App is currently offline!
+                    - **Site:** [Blog List App](https://bloglist-cicd-fragrant-hill-2166.fly.dev)
+
+                    **Severity:** Error

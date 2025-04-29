@@ -110,7 +110,7 @@ jobs:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           colour: #00FF00
           message: |
-            - **Site:** [Blog List App](https://fly.io/apps/bloglist-cicd-fragrant-hill-2166)
+            - **Site:** [Blog List App](https://bloglist-cicd-fragrant-hill-2166.fly.dev)
             - **Commit Author**: ${{ github.event.head_commit.author.username }}
             - **Commit**: [${{ github.event.head_commit.id }}](${{ github.event.head_commit.url }})
 
