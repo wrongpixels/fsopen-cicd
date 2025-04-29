@@ -1,68 +1,113 @@
-import Blog from './Blog.jsx'
+import { describe, test, expect, vi, beforeEach } from 'vitest'
+import Blog from './Blog'
 import { screen, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
+
+const blog = {
+  id: '123',
+  title: 'Bob Log Blog',
+  author: 'Bob',
+  url: 'https://boblog.com',
+  likes: 0,
+  user: {
+    username: 'Willy',
+    id: '456',
+  },
+}
+
+let replaceBlogMutation
+
+vi.mock('../hooks/useNotification', () => ({
+  default: () => ({
+    showError: vi.fn(),
+    showNotification: vi.fn(),
+  }),
+}))
+
+vi.mock('../hooks/useBlogs', () => ({
+  useBlog: () => ({
+    blogsQuery: {
+      isLoading: false,
+      isError: false,
+      data: [blog]
+    },
+    replaceBlogMutation: {
+      mutate: replaceBlogMutation
+    }
+  })
+}))
 
 describe('<Blog /> component', () => {
-
-  const blog = {
-    title: 'Bob Log Blog',
-    author: 'Bob',
-    url: 'https://boblog.com',
-    likes: 0,
-    user: {
-      username: 'Willy'
-    }
-  }
   const activeUser = {
-    username: 'Bob'
+    username: 'Bob',
   }
-  let currentContainer
-  let toggleableContainer
 
-  const hiddenStyle = 'display: none'
-  let fillerMock = vi.fn()
-  let likeMock = vi.fn()
-  beforeEach( () => {
-    fillerMock = vi.fn()
-    likeMock = vi.fn()
-    const { container } = render(<Blog
-      activeUser={activeUser}
-      deleteBlog={fillerMock}
-      showNotification={fillerMock}
-      likeBlog={likeMock}
-      blog={blog}
-    />)
-    currentContainer = container
-    toggleableContainer = currentContainer.querySelector('.toggleable-content')
+  let queryClient
 
+  beforeEach(() => {
+    queryClient = new QueryClient({
+      defaultOptions: {
+        queries: {
+          retry: false,
+        },
+      },
+    })
+
+    replaceBlogMutation = vi.fn()
   })
 
-  test('displays title and author, but not url and likes', () => {
-    const title = screen.getByText(blog.title)
-    const author = screen.getByText(`by ${blog.author}`)
-    const url = screen.getByText(blog.url, { exact: false })
-    const likes = screen.getByText('Likes:')
-    expect(title).toBeVisible()
-    expect(author).toBeVisible()
-    expect(url).not.toBeVisible()
-    expect(likes).not.toBeVisible()
-    expect(toggleableContainer).toHaveStyle(hiddenStyle)
+  const renderBlog = () => {
+    return render(
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter initialEntries={[`/blogs/${blog.id}`]}>
+          <Routes>
+            <Route path="/blogs/:id" element={<Blog user={activeUser} />} />
+          </Routes>
+        </MemoryRouter>
+      </QueryClientProvider>
+    )
+  }
+
+  test('displays title and author', () => {
+    renderBlog()
+    expect(screen.getByText(blog.title)).toBeInTheDocument()
+    expect(screen.getByText(`(by ${blog.author})`)).toBeInTheDocument()
   })
-  test('url and likes become visible after click', async () => {
-    const url = screen.getByText(blog.url, { exact: false })
-    const likes = screen.getByText('Likes:')
-    const user = userEvent.setup()
-    const button = screen.getByText('Show details')
-    await user.click(button)
-    expect(url).toBeVisible()
-    expect(likes).toBeVisible()
-    expect(toggleableContainer).not.toHaveStyle(hiddenStyle)
+
+  test('displays URL and likes', () => {
+    renderBlog()
+    expect(screen.getByText(blog.url)).toBeInTheDocument()
+    expect(screen.getByText('Likes:')).toBeInTheDocument()
+    expect(screen.getByText('0')).toBeInTheDocument()
   })
-  test('if we hit like 2, thus many calls take place', async () => {
+
+  test('clicking like button calls mutation with correct data', async () => {
+    renderBlog()
     const user = userEvent.setup()
     const likeButton = screen.getByText('Like!')
+
     await user.click(likeButton)
     await user.click(likeButton)
-    expect(likeMock.mock.calls).toHaveLength(2)
+
+    expect(replaceBlogMutation).toHaveBeenCalledTimes(2)
+    expect(replaceBlogMutation).toHaveBeenCalledWith(
+      { id: blog.id, likes: 1 },
+      expect.any(Object)
+    )
+  })
+
+
+
+  test('delete button is shown only for blog creator', () => {
+    renderBlog()
+    const deleteButton = screen.queryByText('Remove')
+
+    if (blog.user.username === activeUser.username) {
+      expect(deleteButton).toBeInTheDocument()
+    } else {
+      expect(deleteButton).not.toBeInTheDocument()
+    }
   })
 })

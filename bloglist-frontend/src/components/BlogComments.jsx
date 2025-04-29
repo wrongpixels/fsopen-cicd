@@ -41,7 +41,7 @@ const BlogComments = ({ targetBlog }) => {
   }
 
   return (
-    <div>
+    <div className='blog-comments'>
       <div {...styles.bubble}>
         <div className="mt-2 pb-1">
           <h4>

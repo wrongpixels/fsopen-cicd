@@ -1,48 +1,50 @@
+import { describe, test, expect, vi, beforeEach } from 'vitest'
 import NewBlog from './NewBlog.jsx'
 import { screen, render } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 describe('<NewBlog /> form', () => {
-
   const blog = {
+    id: '123',
     title: 'Bob Log Blog',
     author: 'Bob',
     url: 'https://boblog.com',
+    likes: 0,
+    user: {
+      username: 'Willy',
+      id: '456',
+    },
   }
 
-  let currentContainer
-  let toggleableContainer
+  vi.mock('../hooks/useNotification', () => ({
+    default: () => ({
+      showError: vi.fn(),
+      showNotification: vi.fn()
+    })
+  }))
 
-  const hiddenStyle = 'display: none'
-  let fillerMock = vi.fn()
   let addBlogMock = vi.fn()
 
-  beforeEach( () => {
-    fillerMock = vi.fn()
+  beforeEach(() => {
     addBlogMock = vi.fn()
-    const { container } = render(<NewBlog
-      showNotification={fillerMock}
-      addNewBlog={addBlogMock}
-    />)
-    currentContainer = container
-    toggleableContainer = currentContainer.querySelector('.toggleable-content')
-
+    render(<NewBlog addNewBlog={addBlogMock} />)
   })
 
   test('sends the right data to create the blog', async () => {
     const user = userEvent.setup()
-    const userInput = screen.getByPlaceholderText('Blog title')
-    const authorInput = screen.getByPlaceholderText('Blog author')
-    const urlInput = screen.getByPlaceholderText('Blog URL')
+    const userInput = screen.getByPlaceholderText('Title')
+    const authorInput = screen.getByPlaceholderText('Author')
+    const urlInput = screen.getByPlaceholderText('URL')
     await user.type(userInput, blog.title)
     await user.type(authorInput, blog.author)
     await user.type(urlInput, blog.url)
     const button = await screen.getByText('Add entry')
     await user.click(button)
     expect(addBlogMock.mock.calls).toHaveLength(1)
-    expect(addBlogMock.mock.calls[0][0]).toBe(blog.title)
-    expect(addBlogMock.mock.calls[0][1]).toBe(blog.author)
-    expect(addBlogMock.mock.calls[0][2]).toBe(blog.url)
+    expect(addBlogMock.mock.calls[0][0]).toEqual({
+      title: blog.title,
+      author: blog.author,
+      url: blog.url
+    })
   })
-
 })

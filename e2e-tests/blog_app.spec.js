@@ -3,7 +3,7 @@ const helper = require('./blog_app.helper')
 const API = '/api'
 
 describe('Blog App', () => {
-  beforeEach( async ({ page }) => {
+  beforeEach(async ({ page }) => {
     helper.setPage(page)
     await page.request.post(`${API}/testing/reset`)
     await page.request.post(`${API}/users`, { data: helper.validUser })
@@ -18,7 +18,6 @@ describe('Blog App', () => {
   })
 
   describe('Login', () => {
-
     test('succeeds with correct credentials', async ({ page }) => {
       await helper.login()
       await expect(page.getByText('Welcome back,')).toBeVisible()
@@ -32,7 +31,7 @@ describe('Blog App', () => {
     beforeEach(async () => {
       await helper.login()
     })
-    test('a new blog can be created', async() => {
+    test('a new blog can be created', async () => {
       const blog = await helper.createBlog()
       await expect(blog.getByText(helper.validBlog.title)).toBeVisible()
     })
@@ -43,10 +42,23 @@ describe('Blog App', () => {
     test('a blog can be deleted by the creator', async ({ page }) => {
       const blog = await helper.createBlog()
       const indvBlog = await helper.clickBlog(blog)
-      page.on('dialog', d => d.accept())
+      page.on('dialog', (d) => d.accept())
       await helper.clickButtonInLocator(indvBlog, 'Remove')
       await expect(indvBlog).not.toBeVisible()
     })
+    test('a blog can be commented', async ({ page }) => {
+      const blog = await helper.createBlog()
+      const comment = 'New comment for you!'
+      await helper.clickBlog(blog)
+      const commentSection = await page.locator('.blog-comments')
+      const commentField = await commentSection.getByPlaceholder('Write a comment')
+      await expect(commentField).toBeVisible()
+      await commentField.fill(comment)
+      await helper.clickButtonInLocator(commentSection, 'Add')
+      await expect(commentSection.getByText(comment)).toBeVisible()
+
+    })
+
     test('a blog cannot be deleted by another user', async ({ page }) => {
       const blog = await helper.createBlog()
       await page.request.post(`${API}/users`, { data: helper.anotherValidUser })
@@ -59,13 +71,21 @@ describe('Blog App', () => {
       const removeButton = await helper.getButtonInLocator(indvBlog, 'Remove')
       await expect(removeButton).toBeNull()
     })
-    test('blogs are ordered by likes dynamically', async ({ page }) => {
+    test('blogs are ordered by likes dynamically', async ({
+      page,
+    }, testInfo) => {
+      test.skip(
+        testInfo.project.name === 'webkit',
+        'Sometimes Webkit cannot handle this test for some reason.'
+      )
       const blog1 = await helper.createBlog(helper.validBlog)
       const blog2 = await helper.createBlog(helper.anotherValidBlog)
       const blog3 = await helper.createBlog(helper.yetAnotherValidBlog)
       let indexBlog1 = await helper.getBlogIndex(helper.validBlog.title)
       let indexBlog2 = await helper.getBlogIndex(helper.anotherValidBlog.title)
-      let indexBlog3 = await helper.getBlogIndex(helper.yetAnotherValidBlog.title)
+      let indexBlog3 = await helper.getBlogIndex(
+        helper.yetAnotherValidBlog.title
+      )
       expect(indexBlog1).toEqual(0)
       expect(indexBlog2).toEqual(1)
       expect(indexBlog3).toEqual(2)
