@@ -47,4 +47,6 @@ app.get('/*', (req, res) => {
 app.use(middleware.badRequestHandler)
 app.use(middleware.errorHandler)
 
+console.log('error')
+
 module.exports = app
